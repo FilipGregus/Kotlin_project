@@ -2,7 +2,7 @@ import java.io.BufferedReader
 import java.io.File
 import java.io.FileReader
 
-fun parseCSV(filePath: String): List<List<String>> {
+fun parseCSV(filePath: String, trim:Boolean): List<List<String>> {
     val data: MutableList<List<String>> = mutableListOf()
 
     try {
@@ -11,8 +11,10 @@ fun parseCSV(filePath: String): List<List<String>> {
 
         var line: String?
         while (bufferedReader.readLine().also { line = it } != null) {
-            val values = line!!.split(",") // assuming CSV file uses comma as delimiter
-            data.add(values)
+            if ((trim && line!!.isNotEmpty()) || !trim) {
+                val values = line!!.split(",") // assuming CSV file uses comma as delimiter
+                data.add(values)
+            }
         }
 
         bufferedReader.close()
@@ -26,6 +28,6 @@ fun main(args: Array<String>)
 {
     val path = "strava.csv"
 
-    val x = parseCSV(path)
-    println(x[0][10])
+    val x = parseCSV(path,true)
+    x.forEach { println(it) }
 }
